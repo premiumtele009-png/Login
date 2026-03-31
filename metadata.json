@@ -1,0 +1,5 @@
+{
+  "name": "AuthDash",
+  "description": "A secure web dashboard with username/password authentication and Gmail-based password reset.",
+  "requestFramePermissions": []
+}

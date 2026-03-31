@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { auth, db } from "../../lib/firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { Button } from "../UI/Button";
 import { Input } from "../UI/Input";
@@ -45,6 +45,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
       const user = userCredential.user;
 
       await updateProfile(user, { displayName: data.displayName });
+      
+      // Send verification email
+      await sendEmailVerification(user);
 
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
@@ -54,7 +57,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
         createdAt: serverTimestamp(),
       });
 
-      toast.success("Account created successfully!");
+      toast.success("Account created! Please check your email for verification.");
     } catch (error: any) {
       console.error("Registration error:", error);
       toast.error(error.message || "Failed to create account");

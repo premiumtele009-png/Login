@@ -10,6 +10,7 @@ import { doc, getDocFromServer } from "firebase/firestore";
 import LoginForm from "./components/Auth/LoginForm";
 import RegisterForm from "./components/Auth/RegisterForm";
 import ResetPasswordForm from "./components/Auth/ResetPasswordForm";
+import VerifyEmail from "./components/Auth/VerifyEmail";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Layout from "./components/Layout/Layout";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -59,15 +60,28 @@ export default function App() {
       <Layout user={user}>
         <AnimatePresence mode="wait">
           {user ? (
-            <motion.div
-              key="dashboard"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Dashboard user={user} />
-            </motion.div>
+            user.emailVerified ? (
+              <motion.div
+                key="dashboard"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Dashboard user={user} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="verify-email"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="flex justify-center items-center min-h-[calc(100vh-12rem)]"
+              >
+                <VerifyEmail />
+              </motion.div>
+            )
           ) : (
             <motion.div
               key={authView}
